@@ -42,9 +42,6 @@ int CDemo::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	
-	CRgn newShape;
-	newShape.CreateEllipticRgnIndirect(100, 100, 900, 900);
-	SetWindowRgn(newShape, TRUE);
 	SetTimer(ntime, ntime,NULL);
 
 	return 0;

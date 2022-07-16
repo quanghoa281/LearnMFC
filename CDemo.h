@@ -12,6 +12,7 @@ private:
 	CRect _oldWindow;
 	int ntime;
 	int px, py;
+	bool sttcbr;
 public:
 	CDemo();
 	virtual ~CDemo();
@@ -27,6 +28,7 @@ public:
 	afx_msg void OnClose();
 	afx_msg void OnDestroy();
 	afx_msg void OnPaint();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };
 
 

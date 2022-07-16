@@ -38,7 +38,7 @@ BOOL CLearnMFC::InitInstance()
 	CBrush cbrush;
 	HICON hicon = LoadIcon(IDI_ICON1);
 	
-	cbrush.CreateSolidBrush(RGB( 0, 255, 255));
+	cbrush.CreateSolidBrush(RGB(255, 0, 0));
 	CDemo* main = new CDemo();
 	CRect rect(0, 0, 200, 200);
 	CString className = AfxRegisterWndClass(CS_HREDRAW | CS_VREDRAW, NULL, cbrush, NULL);
@@ -46,7 +46,7 @@ BOOL CLearnMFC::InitInstance()
 	m_pMainWnd = main;
 	main->init(hicon);
 	MoveWindow(main->GetSafeHwnd(), 300, 300, 900, 900, true);
-	main->ShowWindow(SW_SHOWNORMAL);
+	main->ShowWindow(SW_SHOW);
 	/*do {
 		stop = AfxMessageBox(m_lpCmdLine,
 			MB_YESNO | MB_ICONQUESTION, 0);

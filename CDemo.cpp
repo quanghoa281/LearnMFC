@@ -16,6 +16,7 @@ CDemo::CDemo()
 	ntime = 20;
 	px = 0;
 	py = 50;
+	sttcbr = true;
 }
 
 CDemo::~CDemo()
@@ -29,6 +30,7 @@ BEGIN_MESSAGE_MAP(CDemo, CWnd)
 	ON_WM_CLOSE()
 	ON_WM_DESTROY()
 	ON_WM_PAINT()
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -41,10 +43,12 @@ int CDemo::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
-	
-	CRgn newShape;
-	newShape.CreateEllipticRgnIndirect(100, 100, 900, 900);
-	SetWindowRgn(newShape, TRUE);
+	/*CRgn newShape;
+	newShape.CreateRoundRectRgn(100, 100, 600, 600, 30, 30);
+	HGDIOBJ hRgn = newShape.Detach();
+	CBrush brA, brB, brC;
+	VERIFY(brA.CreateSolidBrush(RGB(255, 0, 0)));
+	FrameRgn(dc, newShape, brA, 2, 2);*/
 	SetTimer(ntime, ntime,NULL);
 
 	return 0;
@@ -116,6 +120,7 @@ void CDemo::OnTimer(UINT_PTR nIDEvent)
 		else {
 			px = 0;
 		}
+		
 		Invalidate(true);
 	}
 	CWnd::OnTimer(nIDEvent);
@@ -125,10 +130,10 @@ void CDemo::OnTimer(UINT_PTR nIDEvent)
 void CDemo::OnClose()
 {
 	// TODO: Add your message handler code here and/or call default
-	if (AfxMessageBox(L"are you want close app?", MB_YESNO) == IDNO)
+	/*if (AfxMessageBox(L"are you want close app?", MB_YESNO) == IDNO)
 	{
 		return;
-	}
+	}*/
 	CWnd::OnClose();
 }
 
@@ -146,6 +151,11 @@ void CDemo::OnPaint()
 	CPaintDC dc(this); // device context for painting
 					   // TODO: Add your message handler code here
 					   // Do not call CWnd::OnPaint() for painting messages
+	//dc.SetBkColor(RGB(0, 255, 0));
+	HDC hDC = GetDCEx(NULL, DCX_CLIPCHILDREN | DCX_CACHE);
+
+	GetDC()->SetBkColor(RGB(0, 255, 0));
+
 	CPen cpen(PS_SOLID, 3, RGB(255,0,0));
 	dc.SelectObject(cpen);
 	dc.MoveTo(px, 200);
@@ -159,5 +169,20 @@ void CDemo::OnPaint()
 	dc.SelectObject(cpen);
 	CRect crect1(0,500, 100,600);
 	dc.DrawEdge(crect1, BDR_RAISEDOUTER|BDR_SUNKENOUTER, BF_RECT);
+	CBrush cbrA(),cbrB();
+	//if(sttcbr)dc.SetBkColor(RGB(0, 255, 0));
+	//else dc.SetBkColor(RGB(255,0, 0));
+	//this->bk
+	sttcbr = !sttcbr;
+}
 
+
+HBRUSH CDemo::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CWnd::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  Change any attributes of the DC here
+	
+	// TODO:  Return a different brush if the default is not desired
+	return hbr;
 }

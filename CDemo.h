@@ -1,5 +1,5 @@
 #pragma once
-
+#include "CPosition.h"
 
 // CDemo
 
@@ -10,9 +10,15 @@ class CDemo : public CWnd
 private:
 	CRect _rect;
 	CRect _oldWindow;
+	CPoint _cps;
+	CBitmap _buom;
+	CPosition *_pos;
+	CBitmap _bitmap;
 	int ntime;
-	int px, py;
-	bool sttcbr;
+	int _direc;
+	int _idx;
+	float _bcx, _bcy;
+	bool _sttcbr;
 public:
 	CDemo();
 	virtual ~CDemo();

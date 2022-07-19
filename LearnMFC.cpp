@@ -38,14 +38,14 @@ BOOL CLearnMFC::InitInstance()
 	CBrush cbrush;
 	HICON hicon = LoadIcon(IDI_ICON1);
 	
-	cbrush.CreateSolidBrush(RGB(255, 0, 0));
+	cbrush.CreateSolidBrush(RGB(255, 255, 255));
 	CDemo* main = new CDemo();
-	CRect rect(0, 0, 200, 200);
+	CRect rect(100, 100, 1200, 800);
 	CString className = AfxRegisterWndClass(CS_HREDRAW | CS_VREDRAW, NULL, cbrush, NULL);
-	main->CreateEx(WS_EX_TOPMOST, className, _T("quanghoa281"), WS_SYSMENU | WS_CAPTION | WS_VISIBLE |/* WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/ WS_THICKFRAME, rect, NULL, 0);
+	main->CreateEx(WS_EX_APPWINDOW, className, _T("quanghoa281"), WS_SYSMENU | WS_CAPTION | WS_VISIBLE |/* WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/ WS_THICKFRAME, rect, NULL, 0);
 	m_pMainWnd = main;
 	main->init(hicon);
-	MoveWindow(main->GetSafeHwnd(), 300, 300, 900, 900, true);
+	//MoveWindow(main->GetSafeHwnd(), 300, 300, 900, 900, true);
 	main->ShowWindow(SW_SHOW);
 	/*do {
 		stop = AfxMessageBox(m_lpCmdLine,

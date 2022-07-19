@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CDemo.h" />
+    <ClInclude Include="CPosition.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LearnMFC.h" />
     <ClInclude Include="pch.h" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDemo.cpp" />
+    <ClCompile Include="CPosition.cpp" />
     <ClCompile Include="LearnMFC.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -175,7 +177,10 @@
     <None Include="cursor1.cur" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmap1.bmp" />
     <Image Include="icon1.ico" />
+    <Image Include="image\b1.bmp" />
+    <Image Include="image\b1.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

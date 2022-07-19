@@ -1,8 +1,9 @@
 // CDemo.cpp : implementation file
 //
 
-#include "pch.h"
 #include <iostream>
+#include "pch.h"
+#include "resource.h"
 #include "LearnMFC.h"
 #include "CDemo.h"
 
@@ -13,10 +14,13 @@ IMPLEMENT_DYNAMIC(CDemo, CWnd)
 
 CDemo::CDemo()
 {
-	ntime = 20;
-	px = 0;
-	py = 50;
-	sttcbr = true;
+	ntime = 100;
+	_cps.x = 0;
+	_cps.y = 0;
+	_direc = 1;
+	_bcx = 100;
+	_bcy = 100;
+
 }
 
 CDemo::~CDemo()
@@ -43,13 +47,27 @@ int CDemo::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
-	/*CRgn newShape;
+	// edit shape of form
+	/*
+	CRgn newShape;
 	newShape.CreateRoundRectRgn(100, 100, 600, 600, 30, 30);
 	HGDIOBJ hRgn = newShape.Detach();
 	CBrush brA, brB, brC;
 	VERIFY(brA.CreateSolidBrush(RGB(255, 0, 0)));
 	FrameRgn(dc, newShape, brA, 2, 2);*/
-	SetTimer(ntime, ntime,NULL);
+	_bitmap.LoadBitmap(IDB_BITMAP_BK);
+	_buom.LoadBitmap(IDB_BITMAP_B);
+
+	CRect crect;
+	this->GetClientRect(crect);
+	_pos = new CPosition(0, 0, crect.Width(), crect.Height(), _bcx, _bcy, 20);
+	if (_pos->getDirect() == 1) {
+		_idx = 0;
+	}
+	else {
+		_idx = 3;
+	}
+	SetTimer(ntime, ntime, NULL);
 
 	return 0;
 }
@@ -91,36 +109,9 @@ void CDemo::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
 	if (nIDEvent == ntime) {
-		char ch;
-		CString ss;
 		CRect crect;
 		this->GetClientRect(crect);
-		int lenmax = crect.Width() / 3.5;
-		GetWindowText(ss);
-		int len = ss.GetLength();
-		CString ssplus = _T("");
-		if (lenmax > len) {
-			std::string a; a.assign(lenmax - len, ' ');
-			ssplus = CString(a.c_str());
-		}
-		ss += ssplus;
-		len = ss.GetLength();
-		ch = ss.GetAt(len-1);
-		int i = 0;
-		for (i = len-1; i > 0; i--)
-		{
-			ss.SetAt(i,ss.GetAt(i-1));
-		}
-		ss.SetAt(i, ch);
-		SetWindowText(ss);
-		//
-		if (px <= crect.Width() - 10) {
-			px += 10;
-		}
-		else {
-			px = 0;
-		}
-		
+
 		Invalidate(true);
 	}
 	CWnd::OnTimer(nIDEvent);
@@ -142,6 +133,7 @@ void CDemo::OnDestroy()
 {
 	CWnd::OnDestroy();
 	KillTimer(ntime);
+	_bitmap.DeleteObject();
 	// TODO: Add your message handler code here
 }
 
@@ -151,29 +143,62 @@ void CDemo::OnPaint()
 	CPaintDC dc(this); // device context for painting
 					   // TODO: Add your message handler code here
 					   // Do not call CWnd::OnPaint() for painting messages
-	//dc.SetBkColor(RGB(0, 255, 0));
-	HDC hDC = GetDCEx(NULL, DCX_CLIPCHILDREN | DCX_CACHE);
+	CRect crect2;
+	CBitmap* bmObj;
+	BITMAP bmbuom;
+	CDC memDC;
 
-	GetDC()->SetBkColor(RGB(0, 255, 0));
+	this->GetClientRect(crect2);
+	_buom.GetBitmap(&bmbuom);
+	memDC.CreateCompatibleDC(&dc);
+	bmObj = memDC.SelectObject(&_buom);
+	int len = bmbuom.bmWidth / 6;
+	CPoint cpot = _pos->getPos();
+	dc.StretchBlt(cpot.x, cpot.y, _bcx, _bcy, &memDC, _idx * len, 0, len, bmbuom.bmHeight, SRCCOPY);
+	_pos->calx(), _pos->caly();
+	if (_pos->getDirect() == 1) {
+		if (_idx > 2) _idx = 2;
+		if (_idx == 2) {
+			_sttcbr = false;
+		}
+		else if (_idx == 0) {
+			_sttcbr = true;
+		}
+		if (_sttcbr)_idx++;
+		else _idx--;
+	}
+	else {
+		if (_idx < 3) _idx = 3;
+		if (_idx == 5) {
+			_sttcbr = false;
+		}
+		else if (_idx == 3) {
+			_sttcbr = true;
+		}
+		if (_sttcbr)_idx++;
+		else _idx--;
+	}
 
-	CPen cpen(PS_SOLID, 3, RGB(255,0,0));
-	dc.SelectObject(cpen);
-	dc.MoveTo(px, 200);
-	dc.LineTo(px+50, 200);
-	dc.SetTextColor(RGB(255, 0, 0));
-	dc.TextOutW(px, py, L"quanghoa281");
 
-	CRect crect(0+px,300, 100 + px,400);
-	dc.Draw3dRect(crect, RGB(255, 0, 0), RGB(0, 0, 255));
+	//CPen cpen(PS_SOLID, 3, RGB(255, 0, 0));
+	//dc.SelectObject(cpen);
+	//dc.MoveTo(px, 200);
+	//dc.LineTo(px + 50, 200);
+	//dc.SetTextColor(RGB(255, 0, 0));
+	//dc.SetBkMode(TRANSPARENT);
+	//dc.TextOutW(px, py, L"quanghoa281");
 
-	dc.SelectObject(cpen);
-	CRect crect1(0,500, 100,600);
-	dc.DrawEdge(crect1, BDR_RAISEDOUTER|BDR_SUNKENOUTER, BF_RECT);
-	CBrush cbrA(),cbrB();
-	//if(sttcbr)dc.SetBkColor(RGB(0, 255, 0));
-	//else dc.SetBkColor(RGB(255,0, 0));
-	//this->bk
-	sttcbr = !sttcbr;
+	//CRect crect(0 + px, 300, 100 + px, 400);
+	//dc.Draw3dRect(crect, RGB(255, 0, 0), RGB(0, 0, 255));
+
+	//dc.SelectObject(cpen);
+	//CRect crect1(0, 500, 100, 600);
+	//dc.DrawEdge(crect1, BDR_RAISEDOUTER | BDR_SUNKENOUTER, BF_RECT);
+
+
+	//memDC.SelectObject(bmObj);
+	memDC.SelectObject(bmObj);
+	memDC.DeleteDC();
 }
 
 
@@ -182,7 +207,7 @@ HBRUSH CDemo::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	HBRUSH hbr = CWnd::OnCtlColor(pDC, pWnd, nCtlColor);
 
 	// TODO:  Change any attributes of the DC here
-	
+
 	// TODO:  Return a different brush if the default is not desired
 	return hbr;
 }
